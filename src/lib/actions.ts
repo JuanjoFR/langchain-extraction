@@ -1,6 +1,6 @@
 'use server';
 
-import { personSchema } from './schemas';
+import { dataSchema } from './schemas';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import { ChatOpenAI } from '@langchain/openai';
 
@@ -27,9 +27,7 @@ return null for the attribute's value.`
 ]);
 
 export async function extractInfo(text: string) {
-  const structured_llm = llm.withStructuredOutput(personSchema, {
-    name: 'person'
-  });
+  const structured_llm = llm.withStructuredOutput(dataSchema);
   const prompt = await promptTemplate.invoke({
     text
   });

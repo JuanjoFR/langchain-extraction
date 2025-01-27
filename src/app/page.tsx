@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import { extractInfo } from '../lib/actions';
-import { Person } from '@/lib/schemas';
+import { Data } from '@/lib/schemas';
 
 export default function Home() {
-  const [response, setResponse] = useState<Person | null>(null);
+  const [response, setResponse] = useState<Data | null>(null);
 
   const handleButtonClick = async () => {
     const result = await extractInfo(
-      'Alan Smith is 6 feet tall and has blond hair.'
+      'My name is Jeff, my hair is black and i am 6 feet tall. Anna has the same color hair as me.'
     );
     setResponse(result);
   };

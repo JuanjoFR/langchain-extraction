@@ -5,10 +5,15 @@ const personSchema = z.object({
   hair_color: z
     .optional(z.string())
     .describe("The color of the person's hair if known"),
-  height_in_meters: z.optional(z.string()).describe('Height measured in meters')
+  height_in_meters: z.number().nullish().describe('Height measured in meters')
+});
+
+const dataSchema = z.object({
+  people: z.array(personSchema).describe('Extracted data about people')
 });
 
 type Person = z.infer<typeof personSchema>;
+type Data = z.infer<typeof dataSchema>;
 
-export { personSchema };
-export type { Person };
+export { personSchema, dataSchema };
+export type { Person, Data };

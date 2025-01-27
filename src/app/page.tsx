@@ -1,33 +1,58 @@
 'use client';
 
-import { useState } from 'react';
+import * as React from 'react';
 import { extractInfo } from '../lib/actions';
-import { Data } from '@/lib/schemas';
+import { ExtractionForm } from '@/components/ExtractionForm';
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function Home() {
-  const [response, setResponse] = useState<Data | null>(null);
+  const [result, setResult] = React.useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
 
-  const handleButtonClick = async () => {
-    const result = await extractInfo(
-      'My name is Jeff, my hair is black and i am 6 feet tall. Anna has the same color hair as me.'
-    );
-    setResponse(result);
+  const handleExtract = async (text: string) => {
+    setIsLoading(true);
+    setResult(null);
+    setError(null);
+    try {
+      const entities = await extractInfo(text);
+      setResult(JSON.stringify(entities, null, 2));
+    } catch (err) {
+      console.error('Error extracting entities:', err);
+      setError('Failed to extract entities. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-8 sm:p-20">
-      <div>
-        <h1 className="text-4xl font-bold">Welcome to the Home Page</h1>
-        <button
-          onClick={handleButtonClick}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Extract Info
-        </button>
-        {response && (
-          <div className="mt-4">
-            <h2 className="text-2xl">Response:</h2>
-            <pre>{JSON.stringify(response, null, 2)}</pre>
+    <div className="container mx-auto p-4 max-w-2xl">
+      <h1 className="text-3xl font-bold mb-6">Langchain Extraction</h1>
+
+      <div className="space-y-6">
+        <ExtractionForm onExtract={handleExtract} isLoading={isLoading} />
+
+        {isLoading && (
+          <div className="flex items-center text-blue-500">
+            <AlertCircle className="h-4 w-4 mr-2" />
+            <p>Extracting entities from your text. Please wait...</p>
+          </div>
+        )}
+        {error && (
+          <div className="flex items-center text-red-500">
+            <AlertCircle className="h-4 w-4 mr-2" />
+            <p>{error}</p>
+          </div>
+        )}
+        {result && (
+          <div className="space-y-2">
+            <div className="flex items-center text-green-500">
+              <CheckCircle2 className="h-4 w-4 mr-2" />
+              <p>Entities extracted successfully!</p>
+            </div>
+            <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+              <code>{result}</code>
+            </pre>
           </div>
         )}
       </div>

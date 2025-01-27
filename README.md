@@ -6,6 +6,8 @@ This project uses Next.js with shadcn/ui for creating a text extraction applicat
 
 Watch the video below to see an example usage of the app:
 
+[langchain-extraction.webm](https://github.com/user-attachments/assets/559e6ef6-d8ca-4392-acb0-d80337d44a7a)
+
 ## Technologies Used
 
 This project leverages the following technologies:
